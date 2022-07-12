@@ -7,36 +7,37 @@
       active-text-color="#ffd04b"
       router
     >
-      <el-menu-item index="/">
-        <i class="el-icon-setting"></i>
-        <span slot="title">控制台</span>
-      </el-menu-item>
-
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>系统管理</span>
-        </template>
-        <el-menu-item index="/sys-users">
-          <i class="el-icon-setting"></i>
-          <span slot="title">用户管理</span>
-        </el-menu-item>
-        <el-menu-item index="/sys-roles">
-          <i class="el-icon-setting"></i>
-          <span slot="title">角色管理</span>
-        </el-menu-item>
-        <el-menu-item index="/sys-menus">
-          <i class="el-icon-setting"></i>
-          <span slot="title">菜单管理</span>
-        </el-menu-item>
-      </el-submenu>
+      <menutree
+        v-for="(item, index) in list"
+        :key="index"
+        :data="item"
+      ></menutree>
     </el-menu>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import store from '@/store'
+import menutree from './menutree'
 export default {
-  name: 'index'
+  components: { menutree },
+  data() {
+    return {
+      list: []
+    }
+  },
+  mounted() {
+    this.getlist()
+  },
+  methods: {
+    ...mapActions(['user/navMenu']),
+    async getlist() {
+      await this['user/navMenu']()
+      this.list = store.state.user.menus
+      console.log(store.state.user)
+    }
+  }
 }
 </script>
 

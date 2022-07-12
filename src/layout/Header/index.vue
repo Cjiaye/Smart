@@ -1,15 +1,24 @@
 <template>
   <div>
-    <div class="zuo"></div>
-    <div class="you">
-      <el-dropdown>
+    <div class="l">
+      <el-button
+        class="zd"
+        :class="flag ? 'el-icon-s-unfold ' : 'el-icon-s-fold'"
+        @click="zd"
+      >
+      </el-button>
+    </div>
+    <div class="r">
+      <i class="el-icon-rank" @click="screen"></i>
+      <i class="el-icon-error"></i>
+      <div class="t"></div>
+      <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
-          <i class="avatar_H hand el-avatar el-avatar--circle"></i>
-          <i class="el-icon-arrow-down el-icon--right"></i>
+          duck<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人设置</el-dropdown-item>
-          <el-dropdown-item @click="logout">安全退出</el-dropdown-item>
+          <el-dropdown-item command="a">个人设置</el-dropdown-item>
+          <el-dropdown-item command="b">安全退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -18,20 +27,120 @@
 
 <script>
 export default {
-  mounted() {
-    this.logout()
+  props: ['flag'],
+  data() {
+    return {
+      icon: false,
+      isCollapse: true,
+      fullscreen: false
+    }
   },
+  mounted() {},
   methods: {
-    logout() {}
+    handleCommand(command = 'b') {
+      // alert('退出')
+      this.$confirm('您确定要退出系统吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$notify({
+            title: '提示',
+            message: '正在退出...',
+            type: 'success'
+          })
+          localStorage.removeItem('token')
+          this.$router.push('/login')
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    zd() {
+      this.$emit('zd')
+    },
+    screen() {
+      const element = document.documentElement
+      if (this.fullscreen) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen()
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen()
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen()
+        }
+      } else {
+        if (element.requestFullscreen) {
+          element.requestFullscreen()
+        } else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen()
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen()
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen()
+        }
+      }
+      this.fullscreen = !this.fullscreen
+    }
   }
 }
 </script>
 
-<style scoped>
-.you {
-  float: right;
+<style scoped lang="scss">
+.l {
+  width: 78%;
+  // background-color: aqua;
+  float: left;
+  .el-icon-s-fold,
+  .el-icon-s-unfold {
+    font-size: 23px;
+    color: #fff;
+  }
 }
-.el-avatar {
-  margin-top: 12px;
+.r {
+  width: 22%;
+  height: 60px;
+  float: right;
+  .el-icon-rank,
+  .el-icon-error {
+    float: left;
+    margin-right: 18px;
+    line-height: 60px;
+    font-size: 23px;
+    color: #fff;
+  }
+  .el-icon-rank {
+    transform: rotate(20deg);
+    -webkit-transform: rotate(20deg);
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+  }
+}
+.t {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #c0c4cc;
+  line-height: 60px;
+  float: left;
+  margin-top: 10px;
+}
+.el-dropdown {
+  float: rightzd;
+}
+.zd {
+  border: 0;
+  background-color: #18bc9c;
+  font-size: 25px;
 }
 </style>

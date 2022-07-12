@@ -30,8 +30,16 @@ const logout = () => {
   })
 }
 
+const menu = () => {
+  return request({
+    url: '/menu/nav',
+    method: 'GET'
+  })
+}
+
 export default {
   getCaptcha,
   login,
-  logout
+  logout,
+  menu
 }

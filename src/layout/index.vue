@@ -1,11 +1,11 @@
 <template>
   <el-container>
-    <el-aside width="200px">
+    <el-aside :style="{ width: flag ? '49px' : '200px' }">
       <AppAside></AppAside>
     </el-aside>
     <el-container>
       <el-header>
-        <AppHeader></AppHeader>
+        <AppHeader :flag="flag" @zd="zd"></AppHeader>
       </el-header>
       <el-main>
         <AppMain></AppMain>
@@ -15,15 +15,25 @@
 </template>
 
 <script>
-import AppAside from '@/layout/Aside'
+import AppAside from '@/layout/Aside/index'
 import AppMain from '@/layout/Main'
 import AppHeader from '@/layout/Header'
 export default {
   name: 'index',
+  data() {
+    return {
+      flag: false
+    }
+  },
   components: {
     AppAside,
     AppMain,
     AppHeader
+  },
+  methods: {
+    zd() {
+      this.flag = !this.flag
+    }
   }
 }
 </script>

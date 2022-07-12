@@ -55,7 +55,6 @@ export default {
       loadingStatus: false,
       // 图形验证码路径
       codeImageUrl: '',
-      //   登录参数
       loginForm: {
         username: '',
         password: '',
@@ -74,7 +73,6 @@ export default {
     // 调用接口获取验证码
     async handleGetCaptcha() {
       const { captchaImg, token } = await UserApi.getCaptcha()
-      //   console.log(response)
       this.codeImageUrl = captchaImg
       this.loginForm.token = token
     },
