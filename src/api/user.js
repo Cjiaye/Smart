@@ -23,8 +23,15 @@ const login = (data) => {
     data
   })
 }
+const logout = () => {
+  return request({
+    url: '/logout',
+    method: 'GET'
+  })
+}
 
 export default {
   getCaptcha,
-  login
+  login,
+  logout
 }

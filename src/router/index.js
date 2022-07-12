@@ -12,7 +12,24 @@ const routes = [
   {
     path: '/',
     name: 'layout',
-    component: () => import('../layout')
+    component: () => import('../layout'),
+    children: [
+      {
+        path: '/sys-users',
+        name: 'sys-users',
+        component: () => import('../views/sys-users')
+      },
+      {
+        path: '/sys-roles',
+        name: 'sys-roles',
+        component: () => import('../views/sys-roles')
+      },
+      {
+        path: '/sys-menus',
+        name: 'sys-menus',
+        component: () => import('../views/sys-menus')
+      }
+    ]
   }
 ]
 
