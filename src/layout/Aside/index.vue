@@ -1,7 +1,7 @@
 <template>
   <div class="aside-container">
     <el-menu
-      default-active="/"
+      :default-active="menuPath"
       background-color="#303133"
       text-color="#fff"
       active-text-color="#ffd04b"
@@ -20,11 +20,13 @@
 import { mapActions } from 'vuex'
 import store from '@/store'
 import menutree from './menutree'
+import router from '@/router'
 export default {
   components: { menutree },
   data() {
     return {
-      list: []
+      list: [],
+      menuPath: ''
     }
   },
   mounted() {
@@ -37,6 +39,16 @@ export default {
       this.list = store.state.user.menus
       console.log(store.state.user)
     }
+  },
+  watch: {
+    $route: {
+      handler() {
+        const data = router.currentRoute
+        this.menuPath = data.path
+      },
+      immediate: true,
+      deep: true
+    }
   }
 }
 </script>
@@ -44,5 +56,6 @@ export default {
 <style lang="scss" scoped>
 .el-menu {
   background-color: rgb(34, 45, 50);
+  border-right: none;
 }
 </style>

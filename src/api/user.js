@@ -37,9 +37,17 @@ const menu = () => {
   })
 }
 
+const info = () => {
+  return request({
+    url: '/user/info',
+    method: 'GET'
+  })
+}
+
 export default {
   getCaptcha,
   login,
   logout,
-  menu
+  menu,
+  info
 }

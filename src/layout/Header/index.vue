@@ -1,20 +1,46 @@
 <template>
   <div>
-    <div class="l">
+    <div class="left">
       <el-button
         class="zd"
         :class="flag ? 'el-icon-s-unfold ' : 'el-icon-s-fold'"
         @click="zd"
       >
       </el-button>
+      <el-tag
+        v-for="(item, index) in $store.state.user.tags"
+        :key="index"
+        :closable="item.path != '/'"
+        :class="tagPath === item.path ? 'tags' : 'tag'"
+        @click="$router.push(item.path)"
+        @close="closeTag(item.meta.title)"
+      >
+        {{ item.meta.title }}
+      </el-tag>
     </div>
-    <div class="r">
-      <i class="el-icon-rank" @click="screen"></i>
-      <i class="el-icon-error"></i>
-      <div class="t"></div>
+    <div class="right">
+      <el-tooltip class="item" effect="dark" content="全屏" placement="bottom">
+        <i class="el-icon-rank" @click="screen"></i>
+      </el-tooltip>
+      <el-tooltip
+        class="item"
+        effect="dark"
+        content="关闭全部标签"
+        placement="bottom"
+      >
+        <i class="el-icon-error" @click="gb"></i>
+      </el-tooltip>
+      <div class="tou">
+        <el-avatar
+          :size="40"
+          :src="$store.state.user.avatar"
+          class="avatar"
+        ></el-avatar>
+      </div>
       <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
-          duck<i class="el-icon-arrow-down el-icon--right"></i>
+          {{ $store.state.user.nameinfo
+          }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="a">个人设置</el-dropdown-item>
@@ -26,17 +52,23 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import router from '@/router'
 export default {
   props: ['flag'],
   data() {
     return {
       icon: false,
       isCollapse: true,
-      fullscreen: false
+      fullscreen: false,
+      tagPath: ''
     }
   },
-  mounted() {},
+  mounted() {
+    this.getlist()
+  },
   methods: {
+    ...mapActions(['user/allclose', 'user/head', 'user/closeTags']),
     handleCommand(command = 'b') {
       // alert('退出')
       this.$confirm('您确定要退出系统吗？', '提示', {
@@ -87,15 +119,37 @@ export default {
         }
       }
       this.fullscreen = !this.fullscreen
+    },
+    gb() {
+      this['user/allclose']()
+      router.push('/')
+    },
+    async getlist() {
+      await this['user/head']()
+    },
+    closeTag(name) {
+      this['user/closeTags'](name)
+      if (router.currentRoute.meta.title === name) {
+        router.push('/')
+      }
+    }
+  },
+  watch: {
+    $route: {
+      handler() {
+        const data = router.currentRoute
+        this.tagPath = data.path
+      },
+      immediate: true,
+      deep: true
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.l {
+.left {
   width: 78%;
-  // background-color: aqua;
   float: left;
   .el-icon-s-fold,
   .el-icon-s-unfold {
@@ -103,10 +157,11 @@ export default {
     color: #fff;
   }
 }
-.r {
-  width: 22%;
+.right {
+  width: 18%;
   height: 60px;
   float: right;
+
   .el-icon-rank,
   .el-icon-error {
     float: left;
@@ -124,9 +179,13 @@ export default {
     font-size: 18px;
     color: white;
     font-weight: bold;
+    margin-right: 10px;
   }
 }
-.t {
+.el-dropdown {
+  float: right;
+}
+.tou {
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -142,5 +201,21 @@ export default {
   border: 0;
   background-color: #18bc9c;
   font-size: 25px;
+}
+.tags {
+  background-color: pink;
+  color: #fff;
+  border: 0;
+}
+.el-tag {
+  margin-left: 10px;
+}
+.tag {
+  background-color: #fff;
+  color: pink;
+  border: 0;
+}
+.el-dropdown {
+  margin-right: 20px;
 }
 </style>
