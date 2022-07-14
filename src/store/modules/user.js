@@ -63,7 +63,6 @@ export default {
       try {
         const data = await UserApi.menu()
         commit('menu', data)
-        console.log(data)
       } catch (error) {
         console.log(error)
       }
@@ -78,7 +77,6 @@ export default {
       try {
         const data = await UserApi.info()
         commit('userinfo', data)
-        console.log(data)
       } catch (error) {
         console.log(error)
       }

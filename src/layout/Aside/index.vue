@@ -37,7 +37,6 @@ export default {
     async getlist() {
       await this['user/navMenu']()
       this.list = store.state.user.menus
-      console.log(store.state.user)
     }
   },
   watch: {
