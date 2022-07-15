@@ -43,11 +43,17 @@ const info = () => {
     method: 'GET'
   })
 }
-
+const getPermissionList = () => {
+  return request({
+    url: '/menu/nav',
+    method: 'GET'
+  })
+}
 export default {
   getCaptcha,
   login,
   logout,
   menu,
-  info
+  info,
+  getPermissionList
 }
